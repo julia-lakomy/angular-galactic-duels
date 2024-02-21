@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { SwapiService } from "../../services/swapi.service";
 import { CommonModule, UpperCasePipe } from "@angular/common";
 import {
@@ -21,7 +21,7 @@ import { MatCardModule } from "@angular/material/card";
   selector: "app-battle",
   standalone: true,
   imports: [UpperCasePipe, CommonModule, MatCardModule, MatButtonModule],
-
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: "./battle.component.html",
   styleUrls: ["./battle.component.scss"],
 })
