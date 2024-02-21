@@ -1,5 +1,11 @@
-app-welcome {
-    display: flex;
-    height: 100%;
-    justify-content: center;
+nav {
+  margin: 1rem 0;
+}
+
+main {
+  display: flex;
+  width: auto;
+  height: auto;
+
+  padding: 2em;
 }

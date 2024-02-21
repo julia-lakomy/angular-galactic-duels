@@ -14,8 +14,8 @@
       </p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="accent" (click)="startGame()">Person Battle</button>
-      <button mat-raised-button color="accent" (click)="startGame()">Battleship Battle</button>
+      <button mat-raised-button color="accent" [routerLink]="['/battle', 'person']">Person Battle</button>
+      <button mat-raised-button color="accent">Battleship Battle</button>
     </mat-card-actions>
   </mat-card>
 </section>

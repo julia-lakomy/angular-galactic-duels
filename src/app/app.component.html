@@ -1,1 +1,12 @@
-<app-welcome></app-welcome>
+<header>
+    <nav>
+        <mat-toolbar>
+            <button mat-button routerLink="/">Home</button>
+            <button mat-button [routerLink]="['/battle', 'person']" [routerLinkActive]="['active']">person</button>
+            <button mat-button [routerLink]="['/battle', 'starship']">starship</button>
+        </mat-toolbar>
+    </nav>
+</header>
+<main>
+    <router-outlet></router-outlet>
+</main>

@@ -1,7 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { SwapiService } from "../../services/swapi.service";
 import { CommonModule, UpperCasePipe } from "@angular/common";
-import { catchError, finalize, forkJoin, map, of } from "rxjs";
+import { Subscription, catchError, finalize, forkJoin, map, of } from "rxjs";
+import { ActivatedRoute, Params } from "@angular/router";
 
 interface BattleResult {
   type: "person" | "starship";
@@ -18,14 +19,23 @@ interface BattleResult {
   templateUrl: "./battle.component.html",
   styleUrls: ["./battle.component.scss"],
 })
-export class BattleComponent implements OnInit {
+export class BattleComponent implements OnInit, OnDestroy {
   battleResults: BattleResult[] = [];
   isLoading = false;
   type: "person" | "starship" = "person";
-  constructor(private swapiService: SwapiService) {}
+  paramsSubscription: Subscription = new Subscription;
+  
+  constructor(
+    private swapiService: SwapiService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.playGame();
+    this.paramsSubscription = this.route.params.subscribe((params: Params) => {
+      this.type = params["mode"];
+
+      this.playGame();
+    });
   }
 
   playGame(): void {
@@ -82,5 +92,9 @@ export class BattleComponent implements OnInit {
         finalize(() => (this.isLoading = false))
       )
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.paramsSubscription.unsubscribe();
   }
 }

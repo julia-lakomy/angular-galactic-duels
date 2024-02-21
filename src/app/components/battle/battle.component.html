@@ -1,3 +1,7 @@
+<div>
+  <h2>Battle Mode: {{ type }}</h2>
+</div>
+
 <div *ngIf="isLoading">Loading...</div>
 <div *ngIf="!isLoading">
   <div *ngFor="let result of battleResults">
