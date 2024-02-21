@@ -1,0 +1,8 @@
+<div *ngIf="isLoading">Loading...</div>
+<div *ngIf="!isLoading">
+  <div *ngFor="let result of battleResults">
+    <p>{{ result.type }}: {{ result.name }} ({{ result.attribute }}) - <strong>{{ result.winner ? 'Winner' : 'Loser'
+        }}</strong></p>
+  </div>
+  <button (click)="playGame()">Play Again</button>
+</div>
