@@ -1,0 +1,34 @@
+.welcome-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+mat-card-title,
+mat-card-subtitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+mat-card-header {
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: 4em;
+}
+
+.mat-card-custom-icon {
+    max-width: 100px;
+}
+
+mat-card-actions {
+    padding-top: 4em;
+    justify-content: space-around;
+
+}
