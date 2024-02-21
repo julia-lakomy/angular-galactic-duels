@@ -1,20 +1,26 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { SwapiService } from "../../services/swapi.service";
 import { CommonModule, UpperCasePipe } from "@angular/common";
-import { Subscription, catchError, finalize, forkJoin, map, of } from "rxjs";
+import {
+  Observable,
+  Subscription,
+  catchError,
+  finalize,
+  forkJoin,
+  map,
+  of,
+} from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
-
-interface BattleResult {
-  type: "person" | "starship";
-  name: string;
-  attribute: number;
-  winner: boolean;
-}
+import { BattleResult } from "../../models/battle-result";
+import { Starship } from "../../models/starship";
+import { Person } from "../../models/person";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
   selector: "app-battle",
   standalone: true,
-  imports: [UpperCasePipe, CommonModule],
+  imports: [UpperCasePipe, CommonModule, MatCardModule, MatButtonModule],
 
   templateUrl: "./battle.component.html",
   styleUrls: ["./battle.component.scss"],
@@ -23,8 +29,12 @@ export class BattleComponent implements OnInit, OnDestroy {
   battleResults: BattleResult[] = [];
   isLoading = false;
   type: "person" | "starship" = "person";
-  paramsSubscription: Subscription = new Subscription;
-  
+  paramsSubscription: Subscription = new Subscription();
+  contestants$: Observable<{
+    contestantOne: Person | Starship;
+    contestantTwo: Person | Starship;
+  }> = new Observable();
+
   constructor(
     private swapiService: SwapiService,
     private route: ActivatedRoute
@@ -33,7 +43,6 @@ export class BattleComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.paramsSubscription = this.route.params.subscribe((params: Params) => {
       this.type = params["mode"];
-
       this.playGame();
     });
   }
@@ -41,7 +50,7 @@ export class BattleComponent implements OnInit, OnDestroy {
   playGame(): void {
     this.isLoading = true;
 
-    const contestants$ =
+    this.contestants$ =
       this.type === "person"
         ? forkJoin({
             contestantOne: this.swapiService.getRandomPerson(),
@@ -52,34 +61,34 @@ export class BattleComponent implements OnInit, OnDestroy {
             contestantTwo: this.swapiService.getRandomStarship(),
           });
 
-    contestants$
+    this.contestants$
       .pipe(
         map(({ contestantOne, contestantTwo }) => {
           const attributeOne =
             this.type === "person"
-              ? parseInt(contestantOne.result.properties.height, 10)
+              ? parseInt((contestantOne as Person).height, 10)
               : parseInt(
-                  contestantOne.result.properties.crew.replace(/,/g, ""),
+                  (contestantOne as Starship).crew.replace(/,/g, ""),
                   10
                 );
           const attributeTwo =
             this.type === "person"
-              ? parseInt(contestantTwo.result.properties.height, 10)
+              ? parseInt((contestantTwo as Person).height, 10)
               : parseInt(
-                  contestantTwo.result.properties.crew.replace(/,/g, ""),
+                  (contestantTwo as Starship).crew.replace(/,/g, ""),
                   10
                 );
 
           this.battleResults = [
             {
               type: this.type,
-              name: contestantOne.result.properties.name,
+              name: contestantOne.name,
               attribute: attributeOne,
               winner: attributeOne > attributeTwo,
             },
             {
               type: this.type,
-              name: contestantTwo.result.properties.name,
+              name: contestantTwo.name,
               attribute: attributeTwo,
               winner: attributeTwo > attributeOne,
             },

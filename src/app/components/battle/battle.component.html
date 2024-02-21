@@ -1,12 +1,26 @@
-<div>
-  <h2>Battle Mode: {{ type }}</h2>
-</div>
-
+<h2>Battle Mode: {{ type }}</h2>
 <div *ngIf="isLoading">Loading...</div>
 <div *ngIf="!isLoading">
-  <div *ngFor="let result of battleResults">
-    <p>{{ result.type }}: {{ result.name }} ({{ result.attribute }}) - <strong>{{ result.winner ? 'Winner' : 'Loser'
-        }}</strong></p>
+  <div class="card-wrapper">
+    <div *ngFor="let result of battleResults">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <mat-card-title>{{ result.name }} </mat-card-title>
+
+          <mat-card-subtitle *ngIf="result.type === 'person'; else starship">
+            HEIGHT: {{ result.attribute }}
+          </mat-card-subtitle>
+          <ng-template #starship>
+            <mat-card-subtitle>CREW: {{ result.attribute }}</mat-card-subtitle>
+          </ng-template>
+
+        </mat-card-header>
+        <mat-card-content>
+          <strong [ngStyle]="{'color': result.winner ? 'green' : 'red'}">{{ result.winner ? 'Winner' :
+            'Loser'}}</strong>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
-  <button (click)="playGame()">Play Again</button>
+  <button mat-stroked-button (click)="playGame()">Play Again</button>
 </div>
